@@ -1,8 +1,9 @@
-FROM golang:1.26-alpine AS build
-WORKDIR /src
-COPY . .
-RUN go build -o /server main.go
+FROM node:latest
 
-FROM alpine:3.22
-COPY --from=build /server /server
-CMD ["/server"]
+WORKDIR /app/
+COPY package.json package.json
+RUN npm install
+
+COPY db.json ./
+EXPOSE 3001
+CMD npx json-server db.json -p 3001 -H 127.0.0.1
